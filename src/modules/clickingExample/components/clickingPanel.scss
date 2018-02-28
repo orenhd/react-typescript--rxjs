@@ -1,0 +1,11 @@
+:local(.homeButtonWrapper) {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+}
+
+:local(.clickingDataText) {
+    pointer-events: none;
+    user-select: none;
+}
+

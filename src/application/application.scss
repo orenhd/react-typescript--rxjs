@@ -1,0 +1,24 @@
+@import '../shared/styles/variables';
+
+p {
+    font-family: Roboto,sans-serif;
+}
+
+:global(.margined-content) {
+    margin: $content-margin;
+}
+
+:local(.appDrawer) * {
+    text-decoration: none;
+}
+
+:local(.navLinkActive) {
+    font-weight: bold;
+}
+
+:local(.menuItemTitle) {
+    pointer-events: none; 
+    * {
+        font-weight: bold;
+    }
+}

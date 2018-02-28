@@ -1,0 +1,12 @@
+{
+    "general.navigation": "Navigation",
+    "general.greeting": "Hello, {userName}",
+
+    "clickingExample.clickingExample": "Clicking Example",
+    "clickingExample.userName": "User Name",
+    "clickingExample.homeButtonClicked": "Home button was clicked {count, number} {count, plural, one {time} other {times}}",
+    "clickingExample.homeButtonClickedOutside": "Home button was clicked outside {count, number} {count, plural, one {time} other {times}}",
+
+    "topTwentyAlbums.genre": "Genre",
+    "topTwentyAlbums.topTwentyAlbums": "Top Twenty Albums"
+}

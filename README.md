@@ -1,13 +1,9 @@
-# vue-typescript--rxjs
-A fork of [vue-typescript--vuex](https://github.com/orenhd/vue-typescript--vuex), replacing Vuex state management with a set of module services maintaining RxJS BehaviorSubjects.
+# vue-to-react-typescript--rxjs
+A fork of [vue-typescript--rxjs](https://github.com/orenhd/vue-typescript--rxjs), demonstrating a conversion of the boilerplate codebase from Vue.js to React, while still utilizing Typescript, RxJS and material design components.
 
-A live version of this repository can be found [here](https://orenhd.github.io/vue-typescript--rxjs/) (Dev mode).
+A live version of this repository can be found [here](https://orenhd.github.io/vue-to-react-typescript--rxjs/) (Dev mode).
 
-## Replaced features
-- Replaced Vuex modules with a set of module services, responsible for:
-  - Maintaining RxJS BehaviorSubjects as the module's data properties, including assignment of default values.
-  - Exposing Methods for transmitting values to the above BehaviorSubjects.
-  - Exposing Selectors of Observable type, for fetching the module data in view-digestable models by the Module components.
-  - Local Storage synchronization of selected module data properties.
-  - Implemented [vue-rx](https://www.npmjs.com/package/vue-rx) for subscribing to the module services BehaviorSubjects inside templates of module components.
-  - Replaced Vue Material with [Vuetify](https://vuetifyjs.com/en/) for Material components implementation.
+## Notable Changes
+- Implemented [react-intl](https://www.npmjs.com/package/react-intl) for localization support.
+- Using [Material-UI](http://www.material-ui.com) for Material components implementation.
+- Rewrote the homebrew ClickOutside vue directive as an higher order addon function, returning a document click handler for click outside events.
