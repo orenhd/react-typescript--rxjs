@@ -2,8 +2,6 @@ import React, { PureComponent } from "react";
 
 import { $t } from '../../../i18n/i18n.service'
 
-import { NavLink, Route } from 'react-router-dom';
-
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 import FontIcon from 'material-ui/FontIcon';
 
