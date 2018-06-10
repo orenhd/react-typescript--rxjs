@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 
 import { $t } from '../../../i18n/i18n.service'
 
@@ -19,7 +19,7 @@ interface ClickingPanelProps {
     homeButtonClickedOutsideHandler: () => void;
 }
 
-export default class ClickingPanel extends React.Component<ClickingPanelProps, {}> {
+export default class ClickingPanel extends PureComponent<ClickingPanelProps, {}> {
 
     /* Private Class Properties */
 
@@ -29,7 +29,6 @@ export default class ClickingPanel extends React.Component<ClickingPanelProps, {
 
     componentDidMount() {
         this.boundDocumentClickHandler = getDocumentClickHandler(this, this.homeButtonWrapperRef, this.props.homeButtonClickedOutsideHandler);
-
         document.addEventListener('click', this.boundDocumentClickHandler);
     }
 
@@ -48,14 +47,14 @@ export default class ClickingPanel extends React.Component<ClickingPanelProps, {
                     <FontIcon className="material-icons">home</FontIcon>
                 </FloatingActionButton>
             </div>
-            <p className={styles.clickingDataText} style={{display: this.props.clickingData && this.props.clickingData.homeButtonClickCount ? 'block' : 'none'}}>
+            {this.props.clickingData && this.props.clickingData.homeButtonClickCount > 0 && <p className={styles.clickingDataText}>
                 {$t.formatMessage({id: 'clickingExample.homeButtonClicked'}, 
                     {count: this.props.clickingData.homeButtonClickCount})}
-            </p>
-            <p className={styles.clickingDataText} style={{display: this.props.clickingData && this.props.clickingData.homeButtonClickOutsideCount ? 'block' : 'none'}}>
+            </p>}
+            {this.props.clickingData && this.props.clickingData.homeButtonClickOutsideCount > 0 &&<p className={styles.clickingDataText}>
                 {$t.formatMessage({id: 'clickingExample.homeButtonClickedOutside'}, 
                     {count: this.props.clickingData.homeButtonClickOutsideCount})}
-            </p>
+            </p>}
         </div>
     }
 }

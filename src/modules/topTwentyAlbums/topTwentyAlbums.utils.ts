@@ -1,5 +1,4 @@
 import * as dataModels from './topTwentyAlbums.dataModels';
-
 import * as viewModels from './topTwentyAlbums.viewModels';
 
 export function mapToListAlbumEntries(albumEntries: dataModels.ITunesAlbumEntry[]): viewModels.AlbumEntryListItem[] {

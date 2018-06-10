@@ -4,7 +4,6 @@ import { combineLatest } from 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/take';
 
-
 import * as dataModels from './clickingExample.dataModels';
 
 const LOCAL_STORAGE_KEY: string = 'clickingExample';

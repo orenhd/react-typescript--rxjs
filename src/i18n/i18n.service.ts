@@ -6,10 +6,11 @@
 
 import {IntlProvider, addLocaleData} from 'react-intl';
 
+import en from 'react-intl/locale-data/en';
+
 export const locale = 'en';
 export const messages = require('./i18n.en.json');
 
-import en from 'react-intl/locale-data/en';
 addLocaleData(en);
 
 const intelProvider: IntlProvider = new IntlProvider({

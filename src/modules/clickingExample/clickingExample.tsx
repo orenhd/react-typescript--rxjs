@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 
 import { Subscription } from 'rxjs/Subscription'
 
@@ -12,33 +12,30 @@ import * as clickingExampleService from "./clickingExample.service";
 interface ClickingExamplesState { 
     userName: string;
     clickingData: dataModels.ClickingData;
-    subscriptions: Subscription[];
 }
 
-export default class ClickingExample extends React.Component<{}, ClickingExamplesState> {
+export default class ClickingExample extends PureComponent<{}, ClickingExamplesState> {
+
+    private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
 
     componentWillMount() {
-        let subscriptions: Subscription[] = [];
-
         /* Map Services Subscriptions */
 
-        subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
+        this.subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
                 this.setState({userName});
             })
         );
 
-        subscriptions.push(clickingExampleService.clickingData$.subscribe((clickingData) => {
+        this.subscriptions.push(clickingExampleService.clickingData$.subscribe((clickingData) => {
                 this.setState({clickingData});
             })
         );
-
-        this.setState({subscriptions});
     }
 
     componentWillUnmount() {
-        this.state.subscriptions.forEach((subscription) => {
+        this.subscriptions.forEach((subscription) => {
             subscription.unsubscribe();
         });
     }

@@ -4,8 +4,8 @@
  * by rendering the main Application Component, along with its localization, material-ui theming and routing
  **/
 
-import * as React from "react";
-import * as ReactDOM from "react-dom";
+import React from "react";
+import ReactDOM from "react-dom";
 
 import { HashRouter } from 'react-router-dom';
 
@@ -18,7 +18,7 @@ import * as i18nService from "./i18n/i18n.service";
 
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 
-import Application from "./application/application"
+import Application from "./application/application";
 
 ReactDOM.render(
     <IntlProvider locale={i18nService.locale} messages={i18nService.messages} key={i18nService.locale}>

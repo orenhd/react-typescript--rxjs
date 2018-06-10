@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { Component } from "react";
 
 import {FormattedMessage, FormattedDate} from 'react-intl';
 import { $t } from '../i18n/i18n.service';
@@ -12,7 +12,7 @@ import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 import FontIcon from 'material-ui/FontIcon';
 
-const styles = require('./application.scss');
+const styles = require('./application.scss'); // use require to bypass typescript import, which requires typings 
 
 import * as clickingExampleService from "../modules/clickingExample/clickingExample.service";
 
@@ -20,25 +20,25 @@ import * as clickingExampleService from "../modules/clickingExample/clickingExam
 import ClickingExample from "../modules/clickingExample/clickingExample";
 import TopTwentyAlbums from "../modules/topTwentyAlbums/topTwentyAlbums";
 
-interface ApplicationState { open: boolean, greeting: string, subscriptions: Subscription[] }
+interface ApplicationState { open: boolean, greeting: string }
 
-export default class Application extends React.Component<{}, ApplicationState> {
+export default class Application extends Component<{}, ApplicationState> {
+
+    private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
 
     componentWillMount() {
-        let subscriptions: Subscription[] = [];
-
         /* Map Services Subscriptions */
 
-        subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
+        this.subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
                 this.setState({greeting: userName ? $t.formatMessage({ id: 'general.greeting' }, {userName}) : ''});
             })
         );
     }
 
     componentWillUnmount() {
-        this.state.subscriptions.forEach((subscription) => {
+        this.subscriptions.forEach((subscription) => {
             subscription.unsubscribe();
         });
     }
@@ -46,6 +46,7 @@ export default class Application extends React.Component<{}, ApplicationState> {
     /* Class Methods */
 
     handleToggle = () => this.setState({ open: !this.state.open});
+    handleRequestChange = (open: boolean) => this.setState({open});
     handleClose = () => this.setState({ open: false });
 
     render() {
@@ -59,7 +60,7 @@ export default class Application extends React.Component<{}, ApplicationState> {
             className={styles.appDrawer}
             docked={false} 
             open={this.state.open}
-            onRequestChange={(open) => this.setState({open})}
+            onRequestChange={this.handleRequestChange}
         >
           <MenuItem className={styles.menuItemTitle}>
                 <FormattedMessage id="general.navigation" />

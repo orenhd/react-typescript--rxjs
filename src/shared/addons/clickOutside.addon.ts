@@ -10,12 +10,12 @@ export function getDocumentClickHandler(compClass: any, elRef: any, callback: Fu
     return (event: MouseEvent) => {
         if (!elRef) return;
 
-        if (elRef == event.target) return;
+        if (elRef === event.target) return;
 
         let curEl: any = event.target;
 
         while(curEl.parentElement) {
-            if (curEl.parentElement == elRef) {
+            if (curEl.parentElement === elRef) {
                 return;
             } else {
                 curEl = curEl.parentElement;

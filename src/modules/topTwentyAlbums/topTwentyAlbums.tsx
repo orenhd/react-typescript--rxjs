@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { PureComponent } from "react";
 
 import { Subscription } from 'rxjs/Subscription';
 
@@ -14,40 +14,37 @@ interface TopTwentyAlbumsState {
     genres: dataModels.ITunesGenre[];
     currentGenre: dataModels.ITunesGenre;
     albumEntriesList: viewModels.AlbumEntryListItem[];
-    subscriptions: Subscription[];
 }
 
-export default class TopTwentyAlbums extends React.Component<{}, TopTwentyAlbumsState> {
+export default class TopTwentyAlbums extends PureComponent<{}, TopTwentyAlbumsState> {
+
+    private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
 
     componentWillMount() {
-        let subscriptions: Subscription[] = [];
-
         /* Map Services Subscriptions */
 
-        subscriptions.push(topTwentyAlbumsService.genres$.subscribe((genres) => {
+        this.subscriptions.push(topTwentyAlbumsService.genres$.subscribe((genres) => {
                 this.setState({genres});
             })
         );
 
-        subscriptions.push(topTwentyAlbumsService.currentGenre$.subscribe((currentGenre) => {
+        this.subscriptions.push(topTwentyAlbumsService.currentGenre$.subscribe((currentGenre) => {
                 this.setState({currentGenre});
             })
         );
 
-        subscriptions.push(topTwentyAlbumsService.albumEntriesList$.subscribe((albumEntriesList) => {
+        this.subscriptions.push(topTwentyAlbumsService.albumEntriesList$.subscribe((albumEntriesList) => {
                 this.setState({albumEntriesList});
             })
         );
-
-        this.setState({subscriptions});
 
         topTwentyAlbumsService.loadGenreIds();
     }
 
     componentWillUnmount() {
-        this.state.subscriptions.forEach((subscription) => {
+        this.subscriptions.forEach((subscription) => {
             subscription.unsubscribe();
         });
     }

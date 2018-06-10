@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { SFC } from "react";
 
 import { $t } from '../../../i18n/i18n.service'
 

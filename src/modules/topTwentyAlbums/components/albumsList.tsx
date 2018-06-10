@@ -1,4 +1,4 @@
-import * as React from "react";
+import React, { SFC } from "react";
 
 import {List, ListItem} from 'material-ui/List';
 import Avatar from 'material-ui/Avatar';
@@ -9,7 +9,7 @@ interface AlbumsListProps {
     albumEntriesList: viewModels.AlbumEntryListItem[];
 }
 
-const AlbumsList: React.SFC<AlbumsListProps> = (props: AlbumsListProps) =>
+const AlbumsList: SFC<AlbumsListProps> = (props: AlbumsListProps) =>
 <List>
     {props.albumEntriesList.map(albumEntry => 
         <ListItem
@@ -18,9 +18,9 @@ const AlbumsList: React.SFC<AlbumsListProps> = (props: AlbumsListProps) =>
         primaryText={albumEntry.title}
         secondaryText={
             <p>
-            <span>{albumEntry.artist}</span>
+                <span>{albumEntry.artist}</span>
                 <br />
-            <span>{albumEntry.copyright}</span>
+                <span>{albumEntry.copyright}</span>
             </p>
         }
         secondaryTextLines={2}
