@@ -12,7 +12,7 @@ import * as dataModels from '../clickingExample.dataModels';
 import { getDocumentClickHandler } from '../../../shared/addons/clickOutside.addon';
 
 interface ClickingPanelProps { 
-    clickingData: dataModels.ClickingData;
+    clickingData: dataModels.ClickingData | null;
     homeButtonClickedHandler: () => void;
     homeButtonClickedOutsideHandler: () => void;
 }

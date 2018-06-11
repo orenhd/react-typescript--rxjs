@@ -12,17 +12,22 @@ import * as topTwentyAlbumsService from "./topTwentyAlbums.service";
 
 interface TopTwentyAlbumsState { 
     genres: dataModels.ITunesGenre[];
-    currentGenre: dataModels.ITunesGenre;
+    currentGenre: dataModels.ITunesGenre | null;
     albumEntriesList: viewModels.AlbumEntryListItem[];
 }
 
 export default class TopTwentyAlbums extends PureComponent<{}, TopTwentyAlbumsState> {
 
+    state: TopTwentyAlbumsState = {
+        genres: [],
+        currentGenre: null,
+        albumEntriesList: []
+    }
     private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
 
-    componentWillMount() {
+    componentDidMount() {
         /* Map Services Subscriptions */
 
         this.subscriptions.push(topTwentyAlbumsService.genres$.subscribe((genres) => {

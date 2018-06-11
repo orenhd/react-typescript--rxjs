@@ -10,17 +10,18 @@ import ClickingPanel from './components/clickingPanel';
 import * as clickingExampleService from "./clickingExample.service";
 
 interface ClickingExamplesState { 
-    userName: string;
-    clickingData: dataModels.ClickingData;
+    userName: string | null;
+    clickingData: dataModels.ClickingData | null;
 }
 
 export default class ClickingExample extends PureComponent<{}, ClickingExamplesState> {
 
+    state: ClickingExamplesState = { userName: null, clickingData: null };
     private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
 
-    componentWillMount() {
+    componentDidMount() {
         /* Map Services Subscriptions */
 
         this.subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
@@ -56,10 +57,10 @@ export default class ClickingExample extends PureComponent<{}, ClickingExamplesS
 
     render() {
         return <div className="clicking-example margined-content">
-            <UserNameBar 
+            {this.state.userName !== null && <UserNameBar 
                 userName={this.state.userName} 
                 userNameChangedHandler={this.setUserName}
-            />
+            />}
             <ClickingPanel
                 clickingData={this.state.clickingData}
                 homeButtonClickedHandler={this.homeButtonClicked}

@@ -24,11 +24,12 @@ interface ApplicationState { open: boolean, greeting: string }
 
 export default class Application extends Component<{}, ApplicationState> {
 
+    state: ApplicationState = { open: false, greeting: '' };
     private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
 
-    componentWillMount() {
+    componentDidMount() {
         /* Map Services Subscriptions */
 
         this.subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
@@ -53,7 +54,6 @@ export default class Application extends Component<{}, ApplicationState> {
         return <div className="application">
         <AppBar
             title={this.state.greeting}
-            iconClassNameRight="muidocs-icon-navigation-expand-more"
             onLeftIconButtonClick={this.handleToggle}
         />
         <Drawer 
