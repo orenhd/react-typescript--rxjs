@@ -1,5 +1,5 @@
 {
-  "name": "vue-to-react-typescript--rxjs",
+  "name": "react-typescript--rxjs",
   "version": "1.0.0",
   "description": "A fork of vue-typescript--rxjs, demonstrating a conversion of the boilerplate codebase from Vue.js to React, while still utilizing Typescript, RxJS and material design components",
   "main": "index.js",
