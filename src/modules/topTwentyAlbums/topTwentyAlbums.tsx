@@ -61,14 +61,15 @@ export default class TopTwentyAlbums extends PureComponent<{}, TopTwentyAlbumsSt
     }
 
     render() {
+        const { genres, currentGenre, albumEntriesList } = this.state;
         return <div className="top-twenty-albums">
             <GenreSelectionBar 
-                genres={this.state.genres} 
-                currentGenre={this.state.currentGenre}
+                genres={genres} 
+                currentGenre={currentGenre}
                 genreSelectedHandler={this.loadAlbumEntriesByGenreId}
             />
             <AlbumsList
-                albumEntriesList={this.state.albumEntriesList}
+                albumEntriesList={albumEntriesList}
             />
         </div>
     }

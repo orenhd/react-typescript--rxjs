@@ -22,3 +22,7 @@ export interface ITunesGenre {
     title: string;
     id: number;
 }
+
+export interface ITunesGenresMap {
+    [id: string]: ITunesGenre
+}

@@ -6,6 +6,11 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
 
+import keyBy from 'lodash/keyBy';
+import flow from 'lodash/flow';
+import values from 'lodash/values';
+import sortBy from 'lodash/sortBy';
+
 import * as iTunesService from "./services/iTunes.service";
 
 import * as dataModels from './topTwentyAlbums.dataModels';
@@ -33,7 +38,7 @@ function parseLocalStorageObj(localStorageItem: string) {
 
 /* Private State BehaviorSubjects */
 
-const _genres$: BehaviorSubject<dataModels.ITunesGenre[]> = new BehaviorSubject<dataModels.ITunesGenre[]>([]);
+const _genresMap$: BehaviorSubject<dataModels.ITunesGenresMap> = new BehaviorSubject<dataModels.ITunesGenresMap>({});
 const _albumEntries$: BehaviorSubject<dataModels.ITunesAlbumEntry[]> = new BehaviorSubject<dataModels.ITunesAlbumEntry[]>([]);
 const _currentGenreId$: BehaviorSubject<number | null> = new BehaviorSubject<number | null>(_localStorageObj.currentGenreId || null);
 
@@ -60,7 +65,8 @@ export function loadAlbumEntriesByGenreId(genreId: number): void {
 
 const _genresToLoadSubscription$ = _genresToLoad$.switchMap(() => iTunesService.getGenres())
     .subscribe((genres: dataModels.ITunesGenre[]) => {
-        _genres$.next(genres);
+        const genresMap = keyBy(genres, 'id');
+        _genresMap$.next(genresMap);
 
         const curGenreId: number = _localStorageObj.currentGenreId || genres[0].id;
 
@@ -78,12 +84,19 @@ const _albumEntriesToLoadByGenreIdSubscription$ = _albumEntriesToLoadByGenreId$
 
 /* Public Selectors */
 
-export const genres$: Observable<dataModels.ITunesGenre[]> = _genres$.map(genres => genres);
+export const genres$: Observable<dataModels.ITunesGenre[]> = _genresMap$.map(genresMap => {
+    if (!genresMap) return [];
 
-export const currentGenre$: Observable<dataModels.ITunesGenre> = _currentGenreId$.withLatestFrom(_genres$, (currentGenreId, genres) => {
-    const genresIds: number[] = genres.map(genre => genre.id);
-    const curGenreIndex: number = genresIds.indexOf(currentGenreId || 0);
-    return genres[curGenreIndex || 0];
+    return flow([
+        values,
+        (genresArr: dataModels.ITunesGenre[]) => sortBy(genresArr, 'title')
+    ])(genresMap);
+});
+
+export const currentGenre$: Observable<dataModels.ITunesGenre | null> = _currentGenreId$.withLatestFrom(_genresMap$, (currentGenreId, genresMap) => {
+    if (!currentGenreId || !genresMap || !Object.keys(genresMap).length) return null;
+
+    return genresMap[currentGenreId];
 });
 
 export const albumEntriesList$: Observable<viewModels.AlbumEntryListItem[]> = _albumEntries$.map((albumEntries) => {

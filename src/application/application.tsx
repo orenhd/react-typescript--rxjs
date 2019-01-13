@@ -1,30 +1,38 @@
 import React, { Component } from "react";
 
-import {FormattedMessage, FormattedDate} from 'react-intl';
+import { FormattedMessage } from 'react-intl';
 import { $t } from '../i18n/i18n.service';
 
-import { NavLink, Route, Switch, Redirect } from 'react-router-dom';
+import { NavLink, Route, Redirect } from 'react-router-dom';
 
 import { Subscription } from 'rxjs/Subscription';
 
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
+import Chip from 'material-ui/Chip';
 import FontIcon from 'material-ui/FontIcon';
 
 const styles = require('./application.scss'); // use require to bypass typescript import, which requires typings 
 
 import * as clickingExampleService from "../modules/clickingExample/clickingExample.service";
+import * as topTwentyAlbumsService from "../modules/topTwentyAlbums/topTwentyAlbums.service";
+
+import * as topTwentyDataModels from '../modules/topTwentyAlbums/topTwentyAlbums.dataModels';
 
 /* module components */
 import ClickingExample from "../modules/clickingExample/clickingExample";
 import TopTwentyAlbums from "../modules/topTwentyAlbums/topTwentyAlbums";
 
-interface ApplicationState { open: boolean, greeting: string }
+interface ApplicationState {
+    open: boolean,
+    greeting: string,
+    currentGenre: topTwentyDataModels.ITunesGenre | null;
+}
 
 export default class Application extends Component<{}, ApplicationState> {
 
-    state: ApplicationState = { open: false, greeting: '' };
+    state: ApplicationState = { open: false, greeting: '', currentGenre: null };
     private subscriptions: Subscription[] = [];
 
     /* Lifecycle Methods */
@@ -34,7 +42,10 @@ export default class Application extends Component<{}, ApplicationState> {
 
         this.subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
                 this.setState({greeting: userName ? $t.formatMessage({ id: 'general.greeting' }, {userName}) : ''});
-            })
+            }),
+            topTwentyAlbumsService.currentGenre$.subscribe((currentGenre: topTwentyDataModels.ITunesGenre | null) => {
+                this.setState({ currentGenre });
+            }),
         );
     }
 
@@ -51,15 +62,17 @@ export default class Application extends Component<{}, ApplicationState> {
     handleClose = () => this.setState({ open: false });
 
     render() {
+        const { open, greeting, currentGenre } = this.state;
         return <div className="application">
         <AppBar
-            title={this.state.greeting}
+            title={greeting}
+            iconElementRight={currentGenre ? <Chip>{currentGenre.title}</Chip> : undefined}
             onLeftIconButtonClick={this.handleToggle}
         />
         <Drawer 
             className={styles.appDrawer}
             docked={false} 
-            open={this.state.open}
+            open={open}
             onRequestChange={this.handleRequestChange}
         >
           <MenuItem className={styles.menuItemTitle}>
