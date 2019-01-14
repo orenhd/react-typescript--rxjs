@@ -20,6 +20,9 @@ import * as topTwentyAlbumsService from "../modules/topTwentyAlbums/topTwentyAlb
 
 import * as topTwentyDataModels from '../modules/topTwentyAlbums/topTwentyAlbums.dataModels';
 
+import * as clickingExmapleConsts from '../modules/clickingExample/clickingExample.consts';
+import * as topTwentyConsts from '../modules/topTwentyAlbums/topTwentyAlbums.consts';
+
 /* module components */
 import ClickingExample from "../modules/clickingExample/clickingExample";
 import TopTwentyAlbums from "../modules/topTwentyAlbums/topTwentyAlbums";
@@ -78,7 +81,7 @@ export default class Application extends Component<{}, ApplicationState> {
           <MenuItem className={styles.menuItemTitle}>
                 <FormattedMessage id="general.navigation" />
           </MenuItem>
-          <NavLink activeClassName={styles.navLinkActive} to="/clicking-example">
+          <NavLink activeClassName={styles.navLinkActive} to={`/${clickingExmapleConsts.MODULE_ROUTE}`}>
             <MenuItem 
                 leftIcon={<FontIcon className="material-icons">mouse</FontIcon>} 
                 onClick={this.handleClose}
@@ -86,7 +89,7 @@ export default class Application extends Component<{}, ApplicationState> {
                     <FormattedMessage id="clickingExample.clickingExample" />
             </MenuItem>
           </NavLink>
-          <NavLink activeClassName={styles.navLinkActive} to="/top-twenty">
+          <NavLink activeClassName={styles.navLinkActive} to={`/${topTwentyConsts.MODULE_ROUTE}`} >
             <MenuItem 
                 leftIcon={<FontIcon className="material-icons">album</FontIcon>} 
                 onClick={this.handleClose}
@@ -95,10 +98,11 @@ export default class Application extends Component<{}, ApplicationState> {
             </MenuItem>
           </NavLink>
         </Drawer>
-        <Route path="/clicking-example" component={ClickingExample}/>
-        <Route path="/top-twenty" component={TopTwentyAlbums}/>
+        <Route path={`/${clickingExmapleConsts.MODULE_ROUTE}`} component={ClickingExample}/>
+        <Route path={`/${topTwentyConsts.MODULE_ROUTE}`} component={TopTwentyAlbums}/>
+        <Route path={`/${topTwentyConsts.MODULE_ROUTE}/:genreId`} component={TopTwentyAlbums}/>
         <Route exact path="/" render={() => (
-            <Redirect to="/top-twenty"/>
+            <Redirect to={`/${topTwentyConsts.MODULE_ROUTE}`} />
         )}/>
         </div>;
     }

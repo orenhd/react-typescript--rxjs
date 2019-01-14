@@ -1,10 +1,13 @@
 import { Observable } from 'rxjs/Observable';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Subject } from 'rxjs/Subject';
+import { Subscription } from 'rxjs/Subscription';
 import { combineLatest } from 'rxjs/observable/combineLatest';
 import 'rxjs/add/operator/map';
 import 'rxjs/add/operator/switchMap';
 import 'rxjs/add/operator/withLatestFrom';
+import 'rxjs/add/operator/filter';
+import 'rxjs/add/operator/distinctUntilChanged';
 
 import keyBy from 'lodash/keyBy';
 import flow from 'lodash/flow';
@@ -18,6 +21,8 @@ import * as dataModels from './topTwentyAlbums.dataModels';
 import * as viewModels from './topTwentyAlbums.viewModels';
 
 import * as utils from './topTwentyAlbums.utils';
+
+import { parsedHash$ } from '../../shared/services/route.service';
 
 /* Local Storage Definitions, Methods and Init. */
 
@@ -63,23 +68,45 @@ export function loadAlbumEntriesByGenreId(genreId: number): void {
 
 /* Effects */
 
-const _genresToLoadSubscription$ = _genresToLoad$.switchMap(() => iTunesService.getGenres())
-    .subscribe((genres: dataModels.ITunesGenre[]) => {
+const _genresToLoadSubscription$: Subscription = _genresToLoad$.switchMap(() => iTunesService.getGenres())
+    .withLatestFrom(parsedHash$)
+    .subscribe(([genres, parsedHash]: [dataModels.ITunesGenre[], string[]]) => {
         const genresMap = keyBy(genres, 'id');
         _genresMap$.next(genresMap);
 
-        const curGenreId: number = _localStorageObj.currentGenreId || genres[0].id;
+        const hashGenreId: number | null = parsedHash.length ? parseInt(parsedHash[parsedHash.length - 1]) : null;
+        let curGenreId: number = (genresMap[hashGenreId || 0] && hashGenreId)
+            || _localStorageObj.currentGenreId || genres[0].id;
 
         //loading genre ids is always followed by loading the selected genre albums list
         loadAlbumEntriesByGenreId(curGenreId);
     });
 
-const _albumEntriesToLoadByGenreIdSubscription$ = _albumEntriesToLoadByGenreId$
+const _albumEntriesToLoadByGenreIdSubscription$: Subscription = _albumEntriesToLoadByGenreId$
+    .distinctUntilChanged()
     .switchMap((genreId: number) => {
         _currentGenreId$.next(genreId);
         return iTunesService.getTopTwentyAlbumsByGenreId(genreId);
     }).subscribe((albumEntries: dataModels.ITunesAlbumEntry[]) => {
         _albumEntries$.next(albumEntries);
+    });
+
+/* Subscriptions */
+
+const _parsedHashSubscription$: Subscription = parsedHash$
+    .withLatestFrom(_genresMap$)
+    .map(([parsedHash, genresMap]: [string[], dataModels.ITunesGenresMap]): number | null => { // handle only valid top-twenty urls
+        if (!genresMap || !Object.keys(genresMap).length) return null;
+
+        const parsedHashGenreId = utils.getParsedHashGenreId(parsedHash);
+
+        if (!parsedHashGenreId || !genresMap[parsedHashGenreId]) return null;
+
+        return parsedHashGenreId;
+    })
+    .filter((genreId: number | null) => !!genreId)
+    .subscribe((genreId: number | null) => {
+        if (genreId) loadAlbumEntriesByGenreId(genreId);
     });
 
 /* Public Selectors */
