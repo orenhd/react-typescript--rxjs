@@ -99,8 +99,8 @@ export default class Application extends Component<{}, ApplicationState> {
           </NavLink>
         </Drawer>
         <Route path={`/${clickingExmapleConsts.MODULE_ROUTE}`} component={ClickingExample}/>
-        <Route path={`/${topTwentyConsts.MODULE_ROUTE}`} component={TopTwentyAlbums}/>
-        <Route path={`/${topTwentyConsts.MODULE_ROUTE}/:genreId`} component={TopTwentyAlbums}/>
+        <Route exact path={`/${topTwentyConsts.MODULE_ROUTE}`} component={TopTwentyAlbums}/>
+        <Route exact path={`/${topTwentyConsts.MODULE_ROUTE}/:genreId`} component={TopTwentyAlbums}/>
         <Route exact path="/" render={() => (
             <Redirect to={`/${topTwentyConsts.MODULE_ROUTE}`} />
         )}/>
