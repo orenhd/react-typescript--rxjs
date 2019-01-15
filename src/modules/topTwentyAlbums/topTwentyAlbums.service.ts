@@ -112,7 +112,7 @@ const _parsedHashSubscription$: Subscription = parsedHash$
 /* Public Selectors */
 
 export const genres$: Observable<dataModels.ITunesGenre[]> = _genresMap$.map(genresMap => {
-    if (!genresMap) return [];
+    if (!genresMap || !Object.keys(genresMap).length) return [];
 
     return flow([
         values,
