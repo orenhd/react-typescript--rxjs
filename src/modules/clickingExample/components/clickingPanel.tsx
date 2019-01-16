@@ -46,11 +46,11 @@ export default class ClickingPanel extends PureComponent<ClickingPanelProps, {}>
                     <FontIcon className="material-icons">home</FontIcon>
                 </FloatingActionButton>
             </div>
-            {clickingData && clickingData.homeButtonClickCount && <p className={styles.clickingDataText}>
+            {!!(clickingData && clickingData.homeButtonClickCount) && <p className={styles.clickingDataText}>
                 {$t.formatMessage({id: 'clickingExample.homeButtonClicked'}, 
                     {count: clickingData.homeButtonClickCount})}
             </p>}
-            {clickingData && clickingData.homeButtonClickOutsideCount && <p className={styles.clickingDataText}>
+            {!!(clickingData && clickingData.homeButtonClickOutsideCount) && <p className={styles.clickingDataText}>
                 {$t.formatMessage({id: 'clickingExample.homeButtonClickedOutside'}, 
                     {count: clickingData.homeButtonClickOutsideCount})}
             </p>}

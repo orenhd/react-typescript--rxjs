@@ -5,7 +5,7 @@ import { $t } from '../i18n/i18n.service';
 
 import { NavLink, Route, Redirect } from 'react-router-dom';
 
-import { Subscription } from 'rxjs/Subscription';
+import { connect, SelectorsMap } from '../shared/connectToServices';
 
 import AppBar from 'material-ui/AppBar';
 import Drawer from 'material-ui/Drawer';
@@ -27,83 +27,73 @@ import * as topTwentyConsts from '../modules/topTwentyAlbums/topTwentyAlbums.con
 import ClickingExample from "../modules/clickingExample/clickingExample";
 import TopTwentyAlbums from "../modules/topTwentyAlbums/topTwentyAlbums";
 
-interface ApplicationState {
-    open: boolean,
-    greeting: string,
+interface ApplicationProps {
+    userName: string;
     currentGenre: topTwentyDataModels.ITunesGenre | null;
 }
 
-export default class Application extends Component<{}, ApplicationState> {
+interface ApplicationState {
+    open: boolean;
+}
 
-    state: ApplicationState = { open: false, greeting: '', currentGenre: null };
-    private subscriptions: Subscription[] = [];
+export class Application extends Component<ApplicationProps, ApplicationState> { // export disconnected class for testing purposes
 
-    /* Lifecycle Methods */
-
-    componentDidMount() {
-        /* Map Services Subscriptions */
-
-        this.subscriptions.push(clickingExampleService.userName$.subscribe((userName) => {
-                this.setState({greeting: userName ? $t.formatMessage({ id: 'general.greeting' }, {userName}) : ''});
-            }),
-            topTwentyAlbumsService.currentGenre$.subscribe((currentGenre: topTwentyDataModels.ITunesGenre | null) => {
-                this.setState({ currentGenre });
-            }),
-        );
-    }
-
-    componentWillUnmount() {
-        this.subscriptions.forEach((subscription) => {
-            subscription.unsubscribe();
-        });
-    }
+    state: ApplicationState = { open: false };
 
     /* Class Methods */
 
-    handleToggle = () => this.setState({ open: !this.state.open});
-    handleRequestChange = (open: boolean) => this.setState({open});
+    handleToggle = () => this.setState({ open: !this.state.open });
+    handleRequestChange = (open: boolean) => this.setState({ open });
     handleClose = () => this.setState({ open: false });
 
     render() {
-        const { open, greeting, currentGenre } = this.state;
+        const { userName, currentGenre } = this.props;
+        const { open } = this.state;
         return <div className="application">
-        <AppBar
-            title={greeting}
-            iconElementRight={currentGenre ? <Chip>{currentGenre.title}</Chip> : undefined}
-            onLeftIconButtonClick={this.handleToggle}
-        />
-        <Drawer 
-            className={styles.appDrawer}
-            docked={false} 
-            open={open}
-            onRequestChange={this.handleRequestChange}
-        >
-          <MenuItem className={styles.menuItemTitle}>
-                <FormattedMessage id="general.navigation" />
-          </MenuItem>
-          <NavLink activeClassName={styles.navLinkActive} to={`/${clickingExmapleConsts.MODULE_ROUTE}`}>
-            <MenuItem 
-                leftIcon={<FontIcon className="material-icons">mouse</FontIcon>} 
-                onClick={this.handleClose}
-                >
-                    <FormattedMessage id="clickingExample.clickingExample" />
-            </MenuItem>
-          </NavLink>
-          <NavLink activeClassName={styles.navLinkActive} to={`/${topTwentyConsts.MODULE_ROUTE}`} >
-            <MenuItem 
-                leftIcon={<FontIcon className="material-icons">album</FontIcon>} 
-                onClick={this.handleClose}
-                >
-                    <FormattedMessage id="topTwentyAlbums.topTwentyAlbums" />
-            </MenuItem>
-          </NavLink>
-        </Drawer>
-        <Route path={`/${clickingExmapleConsts.MODULE_ROUTE}`} component={ClickingExample}/>
-        <Route exact path={`/${topTwentyConsts.MODULE_ROUTE}`} component={TopTwentyAlbums}/>
-        <Route exact path={`/${topTwentyConsts.MODULE_ROUTE}/:genreId`} component={TopTwentyAlbums}/>
-        <Route exact path="/" render={() => (
-            <Redirect to={`/${topTwentyConsts.MODULE_ROUTE}`} />
-        )}/>
+            <AppBar
+                title={userName ? $t.formatMessage({ id: 'general.greeting' }, { userName }) : ''}
+                iconElementRight={currentGenre ? <Chip>{currentGenre.title}</Chip> : undefined}
+                onLeftIconButtonClick={this.handleToggle}
+            />
+            <Drawer
+                className={styles.appDrawer}
+                docked={false}
+                open={open}
+                onRequestChange={this.handleRequestChange}
+            >
+                <MenuItem className={styles.menuItemTitle}>
+                    <FormattedMessage id="general.navigation" />
+                </MenuItem>
+                <NavLink activeClassName={styles.navLinkActive} to={`/${clickingExmapleConsts.MODULE_ROUTE}`}>
+                    <MenuItem
+                        leftIcon={<FontIcon className="material-icons">mouse</FontIcon>}
+                        onClick={this.handleClose}
+                    >
+                        <FormattedMessage id="clickingExample.clickingExample" />
+                    </MenuItem>
+                </NavLink>
+                <NavLink activeClassName={styles.navLinkActive} to={`/${topTwentyConsts.MODULE_ROUTE}`} >
+                    <MenuItem
+                        leftIcon={<FontIcon className="material-icons">album</FontIcon>}
+                        onClick={this.handleClose}
+                    >
+                        <FormattedMessage id="topTwentyAlbums.topTwentyAlbums" />
+                    </MenuItem>
+                </NavLink>
+            </Drawer>
+            <Route path={`/${clickingExmapleConsts.MODULE_ROUTE}`} component={ClickingExample} />
+            <Route exact path={`/${topTwentyConsts.MODULE_ROUTE}`} component={TopTwentyAlbums} />
+            <Route exact path={`/${topTwentyConsts.MODULE_ROUTE}/:genreId`} component={TopTwentyAlbums} />
+            <Route exact path="/" render={() => (
+                <Redirect to={`/${topTwentyConsts.MODULE_ROUTE}`} />
+            )} />
         </div>;
     }
 }
+
+const mapSelectorsToProps: SelectorsMap = {
+    userName: clickingExampleService.userName$,
+    currentGenre: topTwentyAlbumsService.currentGenre$,
+}
+
+export default connect(mapSelectorsToProps, {})(Application);
