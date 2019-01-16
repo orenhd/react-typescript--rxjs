@@ -6,4 +6,6 @@ A live version of this repository can be found [here](https://orenhd.github.io/r
 ## Notable Changes
 - Implemented [react-intl](https://www.npmjs.com/package/react-intl) for localization support.
 - Using [Material-UI](http://www.material-ui.com) for Material components implementation.
+- Services Selectors and Methods are mapped into props via a homebrew 'connect' HOC.
+- Route state is streamed through a dedicated shared service.
 - Rewrote the homebrew ClickOutside vue directive as an higher order addon function, returning a document click handler for click outside events.
