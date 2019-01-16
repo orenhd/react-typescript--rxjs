@@ -1,7 +1,7 @@
 import React, { PureComponent } from "react";
 import { withRouter, RouteComponentProps } from "react-router";
 
-import { Subscription } from 'rxjs/Subscription';
+import { connect, SelectorsMap, MethodsMap } from '../../shared/connectToServices';
 
 import * as dataModels from './topTwentyAlbums.dataModels';
 import * as viewModels from './topTwentyAlbums.viewModels';
@@ -13,55 +13,27 @@ import * as topTwentyAlbumsService from "./topTwentyAlbums.service";
 
 import { MODULE_ROUTE } from './topTwentyAlbums.consts';
 
-interface TopTwentyAlbumsState {
+interface TopTwentyAlbumsProps extends RouteComponentProps<{}> {
     genres: dataModels.ITunesGenre[];
     currentGenre: dataModels.ITunesGenre | null;
     albumEntriesList: viewModels.AlbumEntryListItem[];
-}
-
-interface TopTwentyAlbumsProps extends RouteComponentProps<{}> {
+    loadGenresIds: any;
     match: any;
     history: any;
 }
 
-class TopTwentyAlbums extends PureComponent<TopTwentyAlbumsProps, TopTwentyAlbumsState> {
-
-    state: TopTwentyAlbumsState = {
-        genres: [],
-        currentGenre: null,
-        albumEntriesList: []
-    }
-    private subscriptions: Subscription[] = [];
+export class TopTwentyAlbums extends PureComponent<TopTwentyAlbumsProps, {}> { // export disconnected class for testing purposes
 
     /* Lifecycle Methods */
 
     componentDidMount() {
-        /* Map Services Subscriptions */
-
-        this.subscriptions.push(topTwentyAlbumsService.genres$.subscribe((genres) => {
-            this.setState({ genres })
-        }),
-            topTwentyAlbumsService.currentGenre$.subscribe((currentGenre) => {
-                this.setState({ currentGenre });
-            }),
-            topTwentyAlbumsService.albumEntriesList$.subscribe((albumEntriesList) => {
-                this.setState({ albumEntriesList });
-            })
-        );
-
-        topTwentyAlbumsService.loadGenreIds();
-    }
-
-    componentWillUnmount() {
-        this.subscriptions.forEach((subscription) => {
-            subscription.unsubscribe();
-        });
+        this.props.loadGenresIds();
     }
 
     /* Class Methods */
 
     navigateToSelectedGenreId = (genreId: number) => {
-        const { currentGenre } = this.state;
+        const { currentGenre } = this.props;
 
         if (!currentGenre || currentGenre.id !== genreId) {
             this.props.history.push(`/${MODULE_ROUTE}/${genreId}`);
@@ -69,18 +41,28 @@ class TopTwentyAlbums extends PureComponent<TopTwentyAlbumsProps, TopTwentyAlbum
     }
 
     render() {
-        const { genres, currentGenre, albumEntriesList } = this.state;
+        const { genres, currentGenre, albumEntriesList } = this.props;
         return <div className="top-twenty-albums">
-            <GenreSelectionBar
+            { genres && <GenreSelectionBar
                 genres={genres}
                 currentGenre={currentGenre}
                 genreSelectedHandler={this.navigateToSelectedGenreId}
-            />
-            <AlbumsList
+            />}
+            { albumEntriesList && <AlbumsList
                 albumEntriesList={albumEntriesList}
-            />
+            />}
         </div>
     }
 }
 
-export default withRouter(TopTwentyAlbums);
+const mapSelectorsToProps: SelectorsMap = {
+    genres: topTwentyAlbumsService.genres$,
+    currentGenre: topTwentyAlbumsService.currentGenre$,
+    albumEntriesList: topTwentyAlbumsService.albumEntriesList$,
+}
+
+const mapMethodsToProps: MethodsMap = {
+    loadGenresIds: topTwentyAlbumsService.loadGenresIds
+}
+
+export default connect(mapSelectorsToProps, mapMethodsToProps)(withRouter(TopTwentyAlbums));

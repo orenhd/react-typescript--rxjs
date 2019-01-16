@@ -58,7 +58,7 @@ export function setCurrentGenreId(genreId: number) {
     _currentGenreId$.next(genreId);
 }
 
-export function loadGenreIds(): void {
+export function loadGenresIds(): void {
     _genresToLoad$.next();
 }
 
