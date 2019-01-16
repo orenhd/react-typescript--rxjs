@@ -17,7 +17,7 @@ interface TopTwentyAlbumsProps extends RouteComponentProps<{}> {
     genres: dataModels.ITunesGenre[];
     currentGenre: dataModels.ITunesGenre | null;
     albumEntriesList: viewModels.AlbumEntryListItem[];
-    loadGenresIds: any;
+    loadGenresIds: Function;
     match: any;
     history: any;
 }

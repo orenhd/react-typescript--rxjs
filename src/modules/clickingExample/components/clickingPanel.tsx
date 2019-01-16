@@ -39,19 +39,20 @@ export default class ClickingPanel extends PureComponent<ClickingPanelProps, {}>
     boundDocumentClickHandler(event: MouseEvent) {}
 
     render() {
+        const { clickingData, homeButtonClickedHandler, homeButtonClickedOutsideHandler } = this.props;
         return <div className="clicking-panel">
             <div className={`${styles.homeButtonWrapper} margined-content`} ref={(homeButtonWrapper) => {this.homeButtonWrapperRef = homeButtonWrapper}}>
-                <FloatingActionButton mini={true} onClick={this.props.homeButtonClickedHandler}>
+                <FloatingActionButton mini={true} onClick={homeButtonClickedHandler}>
                     <FontIcon className="material-icons">home</FontIcon>
                 </FloatingActionButton>
             </div>
-            {this.props.clickingData && this.props.clickingData.homeButtonClickCount > 0 && <p className={styles.clickingDataText}>
+            {clickingData && clickingData.homeButtonClickCount && <p className={styles.clickingDataText}>
                 {$t.formatMessage({id: 'clickingExample.homeButtonClicked'}, 
-                    {count: this.props.clickingData.homeButtonClickCount})}
+                    {count: clickingData.homeButtonClickCount})}
             </p>}
-            {this.props.clickingData && this.props.clickingData.homeButtonClickOutsideCount > 0 &&<p className={styles.clickingDataText}>
+            {clickingData && clickingData.homeButtonClickOutsideCount && <p className={styles.clickingDataText}>
                 {$t.formatMessage({id: 'clickingExample.homeButtonClickedOutside'}, 
-                    {count: this.props.clickingData.homeButtonClickOutsideCount})}
+                    {count: clickingData.homeButtonClickOutsideCount})}
             </p>}
         </div>
     }

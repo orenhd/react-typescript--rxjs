@@ -7,7 +7,7 @@ export interface SelectorsMap {
 }
 
 export interface MethodsMap {
-  [propKey: string]: any // a service method
+  [propKey: string]: Function // a service method
 }
 
 export const connect = (selectorsMap: SelectorsMap, methodsMap: MethodsMap) => (WrappedComponent: any) => {
