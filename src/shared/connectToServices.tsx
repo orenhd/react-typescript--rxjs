@@ -10,7 +10,7 @@ export interface MethodsMap {
   [propKey: string]: Function // a service method
 }
 
-export const connect = (selectorsMap: SelectorsMap, methodsMap: MethodsMap) => (WrappedComponent: any) => {
+export const connect = (selectorsMap: SelectorsMap, methodsMap: MethodsMap) => (WrappedComponent: React.ComponentType<any>) => {
   return class extends PureComponent<any, any> {
 
     private subscriptions: Subscription[] = [];

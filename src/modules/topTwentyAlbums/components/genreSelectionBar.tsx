@@ -17,7 +17,7 @@ const GenreSelectionBar: React.SFC<GenreSelectionBarProps> = (props: GenreSelect
 <SelectField className="margined-content"
     floatingLabelText={$t.formatMessage({id: 'topTwentyAlbums.genre'})}
     value={props.currentGenre ? props.currentGenre.id : null}
-    onChange={(e: React.SyntheticEvent<{}>, index: number, menuItemValue: any) => { props.genreSelectedHandler(menuItemValue) }}
+    onChange={(e: React.SyntheticEvent<{}>, index: number, menuItemValue: string) => { props.genreSelectedHandler(parseInt(menuItemValue)) }}
 >
     {props.genres.map(genre => <MenuItem value={genre.id} primaryText={genre.title} key={genre.id} />)}
 </SelectField>

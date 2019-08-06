@@ -12,9 +12,9 @@ import * as clickingExampleService from "./clickingExample.service";
 interface ClickingExamplesProps { 
     userName: string;
     clickingData: dataModels.ClickingData | null;
-    setUserName: any;
-    homeButtonClicked: any;
-    homeButtonClickedOutside: any;
+    setUserName: (userName: string) => void;
+    homeButtonClicked: () => void;
+    homeButtonClickedOutside: () => void;
 }
 
 const ClickingExample: SFC<ClickingExamplesProps> = (props: ClickingExamplesProps) => { // export disconnected class for testing purposes

@@ -26,7 +26,7 @@ export default class ClickingPanel extends PureComponent<ClickingPanelProps, {}>
     /* Lifecycle Methods */
 
     componentDidMount() {
-        this.boundDocumentClickHandler = getDocumentClickHandler(this, this.homeButtonWrapperRef, this.props.homeButtonClickedOutsideHandler);
+        this.boundDocumentClickHandler = getDocumentClickHandler(this.homeButtonWrapperRef, this.props.homeButtonClickedOutsideHandler);
         document.addEventListener('click', this.boundDocumentClickHandler);
     }
 
@@ -39,7 +39,7 @@ export default class ClickingPanel extends PureComponent<ClickingPanelProps, {}>
     boundDocumentClickHandler(event: MouseEvent) {}
 
     render() {
-        const { clickingData, homeButtonClickedHandler, homeButtonClickedOutsideHandler } = this.props;
+        const { clickingData, homeButtonClickedHandler } = this.props;
         return <div className="clicking-panel">
             <div className={`${styles.homeButtonWrapper} margined-content`} ref={(homeButtonWrapper) => {this.homeButtonWrapperRef = homeButtonWrapper}}>
                 <FloatingActionButton mini={true} onClick={homeButtonClickedHandler}>

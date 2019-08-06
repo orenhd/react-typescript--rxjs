@@ -13,16 +13,18 @@ import * as topTwentyAlbumsService from "./topTwentyAlbums.service";
 
 import { MODULE_ROUTE } from './topTwentyAlbums.consts';
 
-interface TopTwentyAlbumsProps extends RouteComponentProps<{}> {
+interface TopTwentyAlbumsProps {
     genres: dataModels.ITunesGenre[];
     currentGenre: dataModels.ITunesGenre | null;
     albumEntriesList: viewModels.AlbumEntryListItem[];
     loadGenresIds: Function;
-    match: any;
-    history: any;
 }
 
-export class TopTwentyAlbums extends PureComponent<TopTwentyAlbumsProps, {}> { // export disconnected class for testing purposes
+type IProps = TopTwentyAlbumsProps & RouteComponentProps<{
+    genreId: string,
+}>
+
+export class TopTwentyAlbums extends PureComponent<IProps, {}> { // export disconnected class for testing purposes
 
     /* Lifecycle Methods */
 
